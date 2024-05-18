@@ -1,38 +1,34 @@
-package com.kapozzz.timer.components
+package com.kapozzz.timer.presentation
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import com.kapozzz.ui.AppTheme
-import kotlinx.coroutines.delay
 
 
 @Composable
 internal fun TimerCircularProgressBar(
     percentage: Float,
-    number: Int,
+    minutes: Int,
+    seconds: Int,
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = 22.sp,
-    radius: Dp = 50.dp,
+    radius: Dp = 80.dp,
     strokeWidth: Dp = 8.dp,
     animationDuration: Int = 1000,
     animDelay: Int = 0
@@ -71,34 +67,51 @@ internal fun TimerCircularProgressBar(
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
         }
-        AnimatedContent(
-            targetState = number
-        ) {
+        Row {
+            AnimatedContent(
+                targetState = minutes
+            ) {
+                Text(
+                    text = it.toString(),
+                    color = AppTheme.colors.onBackground,
+                    style = AppTheme.typo.mediumBody
+                )
+            }
             Text(
-                text = it.toString(),
+                text = ":",
                 color = AppTheme.colors.onBackground,
                 style = AppTheme.typo.mediumBody
             )
+            AnimatedContent(
+                targetState = seconds
+            ) {
+                Text(
+                    text = it.toString(),
+                    color = AppTheme.colors.onBackground,
+                    style = AppTheme.typo.mediumBody
+                )
+            }
         }
+
     }
 }
 
-@Composable
-@Preview
-private fun Prev() {
-    AppTheme {
-        val per = remember {
-            mutableStateOf(1f)
-        }
-        TimerCircularProgressBar(percentage = per.value, number = per.value.toInt())
-        val percents = generateSequence(1.0) { it - 0.01 }
-            .takeWhile { it >= 0.1 }
-            .toList()
-        LaunchedEffect(key1 = true) {
-            for (percent in percents) {
-                delay(1000L)
-                per.value = percent.toFloat()
-            }
-        }
-    }
-}
+//@Composable
+//@Preview
+//private fun Prev() {
+//    AppTheme {
+//        val per = remember {
+//            mutableStateOf(1f)
+//        }
+//        TimerCircularProgressBar(percentage = per.value, )
+//        val percents = generateSequence(1.0) { it - 0.01 }
+//            .takeWhile { it >= 0.1 }
+//            .toList()
+//        LaunchedEffect(key1 = true) {
+//            for (percent in percents) {
+//                delay(1000L)
+//                per.value = percent.toFloat()
+//            }
+//        }
+//    }
+//}
