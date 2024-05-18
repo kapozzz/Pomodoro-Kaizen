@@ -12,8 +12,8 @@ object AppTypo {
     val mediumTitle = TextStyle(
         fontFamily = acmeFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 26.sp,
-        lineHeight = 28.sp,
+        fontSize = 32.sp,
+        lineHeight = 34.sp,
         letterSpacing = 0.5.sp
     )
 
@@ -26,10 +26,10 @@ object AppTypo {
     )
 
     val smallBody = TextStyle(
-        fontFamily = acmeFontFamily,
+        fontFamily = aBeeZeeFontsFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 14.sp,
+        fontSize = 14.sp,
+        lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
 

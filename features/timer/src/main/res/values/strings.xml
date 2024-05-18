@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timer_start_button">Start</string>
+    <string name="timer_reset_button">Reset</string>
+    <string name="timer_stop_button">Stop</string>
+</resources>
