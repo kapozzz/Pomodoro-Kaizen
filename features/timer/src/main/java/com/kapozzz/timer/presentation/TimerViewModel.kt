@@ -1,10 +1,13 @@
 package com.kapozzz.timer.presentation
 
-import com.kapozzz.common.notifications.PomodoroProgressNotification
+import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.kapozzz.common.ui_acrh.BaseViewModel
-import com.kapozzz.timer.presentation.model.LongRestPomodoro
-import com.kapozzz.timer.presentation.model.RestPomodoro
-import com.kapozzz.timer.presentation.model.WorkPomodoro
+import com.kapozzz.timer.presentation.model.PomodoroStage
+import com.kapozzz.timer.util.TimerNotificationService
+import com.kapozzz.timer.util.TimerReceiver
+import com.kapozzz.timer.util.calculatePercentage
+import com.kapozzz.timer.util.timeToString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,13 +18,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
-    private val progressNotification: PomodoroProgressNotification
+    private val notificationService: TimerNotificationService
 ) : BaseViewModel<TimerEvent, TimerState, TimerEffect>() {
 
     private var timerJob: Job? = null
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val timerScope = CoroutineScope(Dispatchers.IO)
     private var wasStarted: Boolean = false
-
     override fun createInitialState(): TimerState = TimerState.getDefault()
 
     override fun handleEvent(event: TimerEvent) {
@@ -36,6 +38,21 @@ class TimerViewModel @Inject constructor(
         }
     }
 
+    private var currentStage: PomodoroStage =currentState.program.value[currentState.stage.value]
+
+        init {
+        viewModelScope.launch {
+            subscribeToReceiver()
+        }
+    }
+
+    private suspend fun subscribeToReceiver() {
+        TimerReceiver.flow.collect {
+            handleEvent(it)
+            Log.d("NEW", "STATE")
+        }
+    }
+
     private fun resetTimer() {
         stopTimer()
         with(currentState) {
@@ -44,20 +61,20 @@ class TimerViewModel @Inject constructor(
             percentage.value = 0f
         }
         wasStarted = false
-        startTimer()
     }
 
     private fun stopTimer() {
         currentState.isWorking.value = false
+        updateNotificationTime()
     }
 
     private fun startTimer() {
         with(currentState) {
             isWorking.value = true
             timerJob?.cancel()
-            timerJob = scope.launch {
+            timerJob = timerScope.launch {
                 if (!wasStarted) {
-                    minutes.value = pomodoroStage.value.minutes
+                    minutes.value = currentStage.minutes
                     wasStarted = true
                 }
                 while ((minutes.value > 0 || seconds.value > 0) && isWorking.value) {
@@ -65,11 +82,11 @@ class TimerViewModel @Inject constructor(
                         minutes.value -= 1
                         seconds.value += 59
                     }
-                    showProgressInNotification()
+                    updateNotificationTime()
                     while (seconds.value > 0 && isWorking.value) {
                         seconds.value -= 1
-                        calculatePercentage()
-                        showProgressInNotification()
+                        currentState.calculatePercentage()
+                        updateNotificationTime()
                         delay(1000L)
                     }
                 }
@@ -82,88 +99,18 @@ class TimerViewModel @Inject constructor(
         }
     }
 
-    private fun calculatePercentage() {
-        with(currentState) {
-            percentage.value =
-                (((minutes.value * 59) + seconds.value) * 1f) / (pomodoroStage.value.minutes * 59)
-        }
-    }
-
-    private fun showProgressInNotification() {
-        with(currentState) {
-            progressNotification.showNotification("${minutes.value}:${if (seconds.value < 10) "0" else ""}${seconds.value}")
-        }
+    private fun updateNotificationTime() {
+        notificationService.updateTime(currentState.timeToString(), currentState.isWorking.value)
     }
 
     private fun newStage() {
-        currentState.stage.value += 1
         wasStarted = false
         resetTimer()
-        currentState.pomodoroStage.value = when (currentState.stage.value) {
-            1 -> {
-                WorkPomodoro()
-            }
-
-            2 -> {
-                RestPomodoro()
-            }
-
-            3 -> {
-                WorkPomodoro()
-            }
-
-            4 -> {
-                RestPomodoro()
-            }
-
-            5 -> {
-                WorkPomodoro()
-            }
-
-            6 -> {
-                RestPomodoro()
-            }
-
-            7 -> {
-                WorkPomodoro()
-            }
-
-            8 -> {
-                LongRestPomodoro()
-            }
-
-            9 -> {
-                WorkPomodoro()
-            }
-
-            10 -> {
-                RestPomodoro()
-            }
-
-            11 -> {
-                WorkPomodoro()
-            }
-
-            12 -> {
-                RestPomodoro()
-            }
-
-            13 -> {
-                WorkPomodoro()
-            }
-
-            14 -> {
-                RestPomodoro()
-            }
-
-            15 -> {
-                WorkPomodoro()
-            }
-
-            else -> {
-                currentState.stage.value = 1
-                WorkPomodoro()
-            }
+        currentState.stage.value += 1
+        if (currentState.stage.value > currentState.program.value.size) {
+            setEffect(TimerEffect.TimeExpires)
+        } else {
+            currentStage = currentState.program.value[currentState.stage.value]
         }
     }
 

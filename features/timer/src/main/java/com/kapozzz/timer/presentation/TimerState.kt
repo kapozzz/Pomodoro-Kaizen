@@ -8,25 +8,24 @@ import com.kapozzz.common.ui_acrh.UiEffect
 import com.kapozzz.common.ui_acrh.UiEvent
 import com.kapozzz.common.ui_acrh.UiState
 import com.kapozzz.timer.presentation.model.PomodoroStage
-import com.kapozzz.timer.presentation.model.WorkPomodoro
 
 data class TimerState(
     val stage: MutableState<Int>,
-    val pomodoroStage: MutableState<PomodoroStage>,
     val seconds: MutableState<Int>,
     val minutes: MutableState<Int>,
     val percentage: MutableState<Float>,
-    val isWorking: MutableState<Boolean>
+    val isWorking: MutableState<Boolean>,
+    val program: MutableState<List<PomodoroStage>>
 ) : UiState {
     companion object {
         fun getDefault(): TimerState {
             return TimerState(
-                stage = mutableIntStateOf(1),
+                stage = mutableIntStateOf(0),
                 seconds = mutableIntStateOf(0),
                 minutes = mutableIntStateOf(0),
                 percentage = mutableFloatStateOf(0f),
                 isWorking = mutableStateOf(false),
-                pomodoroStage = mutableStateOf(WorkPomodoro())
+                program = mutableStateOf(PomodoroStage.defaultProgram)
             )
         }
     }
