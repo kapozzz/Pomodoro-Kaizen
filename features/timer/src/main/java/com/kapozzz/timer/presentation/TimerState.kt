@@ -14,7 +14,6 @@ data class TimerState(
     val stage: MutableState<Int>,
     val pomodoroStage: MutableState<PomodoroStage>,
     val seconds: MutableState<Int>,
-    val wasStarted: MutableState<Boolean>,
     val minutes: MutableState<Int>,
     val percentage: MutableState<Float>,
     val isWorking: MutableState<Boolean>
@@ -27,7 +26,6 @@ data class TimerState(
                 minutes = mutableIntStateOf(0),
                 percentage = mutableFloatStateOf(0f),
                 isWorking = mutableStateOf(false),
-                wasStarted = mutableStateOf(false),
                 pomodoroStage = mutableStateOf(WorkPomodoro())
             )
         }

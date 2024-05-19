@@ -1,5 +1,6 @@
 package com.kapozzz.timer.presentation
 
+import com.kapozzz.common.notifications.PomodoroProgressNotification
 import com.kapozzz.common.ui_acrh.BaseViewModel
 import com.kapozzz.timer.presentation.model.LongRestPomodoro
 import com.kapozzz.timer.presentation.model.RestPomodoro
@@ -13,10 +14,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TimerViewModel @Inject constructor() : BaseViewModel<TimerEvent, TimerState, TimerEffect>() {
+class TimerViewModel @Inject constructor(
+    private val progressNotification: PomodoroProgressNotification
+) : BaseViewModel<TimerEvent, TimerState, TimerEffect>() {
 
     private var timerJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO)
+    private var wasStarted: Boolean = false
 
     override fun createInitialState(): TimerState = TimerState.getDefault()
 
@@ -32,57 +36,69 @@ class TimerViewModel @Inject constructor() : BaseViewModel<TimerEvent, TimerStat
         }
     }
 
-    private fun resetCycle() {
-
-    }
-
     private fun resetTimer() {
         stopTimer()
-        val default = TimerState.getDefault()
         with(currentState) {
-            minutes.value = default.minutes.value
-            seconds.value = default.seconds.value
-            percentage.value = default.percentage.value
-            isWorking.value = default.isWorking.value
+            minutes.value = 0
+            seconds.value = 0
+            percentage.value = 0f
         }
+        wasStarted = false
+        startTimer()
     }
 
     private fun stopTimer() {
-        timerJob?.cancel()
         currentState.isWorking.value = false
     }
 
     private fun startTimer() {
-        currentState.isWorking.value = true
         with(currentState) {
+            isWorking.value = true
+            timerJob?.cancel()
             timerJob = scope.launch {
-
-                if (!wasStarted.value) {
+                if (!wasStarted) {
                     minutes.value = pomodoroStage.value.minutes
+                    wasStarted = true
                 }
-                wasStarted.value = true
-                while (minutes.value > 0) {
+                while ((minutes.value > 0 || seconds.value > 0) && isWorking.value) {
                     if (seconds.value == 0) {
-                        seconds.value = 59
                         minutes.value -= 1
+                        seconds.value += 59
                     }
-                    while (seconds.value > 0) {
-                        delay(1000L)
+                    showProgressInNotification()
+                    while (seconds.value > 0 && isWorking.value) {
                         seconds.value -= 1
-                        percentage.value =
-                            (((minutes.value * 59) + seconds.value) * 1f) / (pomodoroStage.value.minutes * 59)
+                        calculatePercentage()
+                        showProgressInNotification()
+                        delay(1000L)
                     }
                 }
-                isWorking.value = false
-                newStage()
-                if (currentState.stage.value != 15) startTimer()
+                if (isWorking.value && wasStarted && minutes.value == 0 && seconds.value == 0) {
+                    isWorking.value = false
+                    newStage()
+                    startTimer()
+                }
             }
+        }
+    }
+
+    private fun calculatePercentage() {
+        with(currentState) {
+            percentage.value =
+                (((minutes.value * 59) + seconds.value) * 1f) / (pomodoroStage.value.minutes * 59)
+        }
+    }
+
+    private fun showProgressInNotification() {
+        with(currentState) {
+            progressNotification.showNotification("${minutes.value}:${if (seconds.value < 10) "0" else ""}${seconds.value}")
         }
     }
 
     private fun newStage() {
         currentState.stage.value += 1
-        currentState.wasStarted.value = false
+        wasStarted = false
+        resetTimer()
         currentState.pomodoroStage.value = when (currentState.stage.value) {
             1 -> {
                 WorkPomodoro()

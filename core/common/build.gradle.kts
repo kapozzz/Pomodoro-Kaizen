@@ -52,4 +52,7 @@ dependencies {
 
     // Compose Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Other core
+    implementation(project(":core:ui"))
 }
