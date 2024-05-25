@@ -100,9 +100,9 @@ fun CreateTaskScreen(
 }
 
 fun handleEffect(effect: CreateTaskEffect, appNavigator: AppNavigator) {
-    when (effect) {
-        CreateTaskEffect.Back -> appNavigator.back()
-    }
+//    when (effect) {
+//        CreateTaskEffect.Back -> appNavigator.back()
+//    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -239,16 +239,16 @@ private fun Screen(
     }
 }
 
-@Composable
-@Preview
-private fun ScreenPreview() {
-    val vm = CreateTaskViewModel()
-    AppTheme {
-        CreateTaskScreen(
-            sendEvent = vm::setEvent,
-            state = CreateTaskState.getDefault(),
-            effects = vm.effect
-        )
-    }
-}
-
+//@Composable
+//@Preview
+//private fun ScreenPreview() {
+//    val vm = CreateTaskViewModel()
+//    AppTheme {
+//        CreateTaskScreen(
+//            sendEvent = vm::setEvent,
+//            state = CreateTaskState.getDefault(),
+//            effects = vm.effect
+//        )
+//    }
+//}
+//
