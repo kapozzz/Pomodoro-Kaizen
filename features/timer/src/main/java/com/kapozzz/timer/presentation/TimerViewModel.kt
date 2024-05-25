@@ -28,12 +28,14 @@ class TimerViewModel @Inject constructor(
 
     override fun handleEvent(event: TimerEvent) {
         when (event) {
-            TimerEvent.ResetTimer -> {
+            is TimerEvent.ResetTimer -> {
                 resetTimer()
             }
-
-            TimerEvent.SwitchTimer -> {
+            is TimerEvent.SwitchTimer -> {
                 if (currentState.isWorking.value) stopTimer() else startTimer()
+            }
+            is TimerEvent.SwitchNotifications -> {
+                currentState.notificationsIsEnabled.value = event.enabled
             }
         }
     }
@@ -69,6 +71,7 @@ class TimerViewModel @Inject constructor(
     }
 
     private fun startTimer() {
+        setEffect(TimerEffect.TimerIsStarted)
         with(currentState) {
             isWorking.value = true
             timerJob?.cancel()
@@ -100,6 +103,7 @@ class TimerViewModel @Inject constructor(
     }
 
     private fun updateNotificationTime() {
+        if (!currentState.notificationsIsEnabled.value) return
         notificationService.updateTime(currentState.timeToString(), currentState.isWorking.value)
     }
 

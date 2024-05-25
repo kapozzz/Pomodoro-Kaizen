@@ -3,13 +3,16 @@ package com.kapozzz.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import com.kapozzz.pomodoro_kaizen.ui.theme.AppTypo
+import com.kapozzz.ui.type.AppTypo
 
 data class Colors(
     val primary: Color,
     val onPrimary: Color,
     val primaryContainer: Color,
     val onPrimaryContainer: Color,
+    val container: Color,
+    val onContainer: Color,
+    val containerOutline: Color,
     val secondary: Color,
     val onSecondary: Color,
     val secondaryContainer: Color,

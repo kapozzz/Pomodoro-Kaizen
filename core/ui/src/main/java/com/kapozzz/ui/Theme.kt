@@ -3,7 +3,7 @@ package com.kapozzz.ui
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.kapozzz.pomodoro_kaizen.ui.theme.AppTypo
+import com.kapozzz.ui.type.AppTypo
 
 @Composable
 fun AppTheme(

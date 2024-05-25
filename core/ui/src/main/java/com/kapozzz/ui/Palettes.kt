@@ -19,5 +19,8 @@ internal val baseLightPalette = Colors(
     onBackground = Color.Black,
     outline = Color.LightGray,
     error = Color.Red,
-    hint = Color.LightGray
+    hint = Color.Gray,
+    container = light,
+    onContainer = Color.Black,
+    containerOutline = Color.Black
 )

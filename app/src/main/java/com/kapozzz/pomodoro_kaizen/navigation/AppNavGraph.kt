@@ -21,5 +21,9 @@ fun AppNavGraph(
             navController, this
         )
 
+        navigationProvider.tasks.registerGraph(
+            navController, this
+        )
+
     }
 }

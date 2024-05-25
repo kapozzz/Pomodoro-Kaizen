@@ -26,7 +26,7 @@ internal object InternalTimerFeatureApi : FeatureApi {
                 TimerScreen(
                     state = viewModel.currentState,
                     sendEvent = viewModel::setEvent,
-                    effect = viewModel.effect
+                    effects = viewModel.effect
                 )
             }
         }

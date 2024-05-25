@@ -79,8 +79,10 @@ dependencies {
 
     // Features
     implementation(project(":features:timer"))
+    implementation(project(":features:tasks"))
 
     // Core
+    implementation(project(":core:presentation"))
     implementation(project(":core:common"))
     implementation(project(":core:ui"))
 

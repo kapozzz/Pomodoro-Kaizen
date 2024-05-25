@@ -1,4 +1,4 @@
-package com.kapozzz.pomodoro_kaizen.ui.theme
+package com.kapozzz.ui.type
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -14,6 +14,14 @@ object AppTypo {
         fontWeight = FontWeight.Normal,
         fontSize = 32.sp,
         lineHeight = 34.sp,
+        letterSpacing = 0.5.sp
+    )
+
+    val bigBody = TextStyle(
+        fontFamily = aBeeZeeFontsFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
 

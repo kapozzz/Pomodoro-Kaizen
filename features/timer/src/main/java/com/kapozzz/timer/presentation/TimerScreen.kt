@@ -1,5 +1,10 @@
 package com.kapozzz.timer.presentation
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -16,13 +21,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.kapozzz.timer.R
 import com.kapozzz.timer.presentation.components.TimerCircularProgressBar
+import com.kapozzz.timer.presentation.components.TimerStage
 import com.kapozzz.ui.AppTheme
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -30,8 +42,42 @@ import kotlinx.coroutines.flow.SharedFlow
 internal fun TimerScreen(
     state: TimerState,
     sendEvent: (event: TimerEvent) -> Unit,
-    effect: SharedFlow<TimerEffect>
+    effects: SharedFlow<TimerEffect>
 ) {
+
+    val context = LocalContext.current
+
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                sendEvent(TimerEvent.SwitchNotifications(true))
+            } else {
+                sendEvent(TimerEvent.SwitchNotifications(false))
+            }
+        }
+
+
+    val lifecycle = LocalLifecycleOwner.current
+    LaunchedEffect(key1 = true) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            effects.collect {
+                when (it) {
+                    TimerEffect.TimeExpires -> TODO()
+                    TimerEffect.TimerIsStarted -> {
+                        if (ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.POST_NOTIFICATIONS
+                            ) == PackageManager.PERMISSION_DENIED
+                        ) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -45,12 +91,7 @@ internal fun TimerScreen(
                 .padding(top = 200.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp),
-                text = "Pomodoro Kaizen!",
-                color = AppTheme.colors.onBackground,
-                style = AppTheme.typo.mediumTitle
-            )
+            TimerStage(stage = state.program.value[state.stage.value])
             Timer(
                 state = state,
                 sendEvent = sendEvent,
@@ -59,8 +100,6 @@ internal fun TimerScreen(
         }
 
     }
-
-
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
@@ -93,7 +132,7 @@ private fun Timer(
                         onClick = { sendEvent(TimerEvent.SwitchTimer) },
                         onLongClick = { sendEvent(TimerEvent.ResetTimer) }
                     ),
-                painter = painterResource( if (it) R.drawable.pause_icon else R.drawable.play_icon),
+                painter = painterResource(if (it) R.drawable.pause_icon else R.drawable.play_icon),
                 contentDescription = null,
                 tint = AppTheme.colors.primary
             )

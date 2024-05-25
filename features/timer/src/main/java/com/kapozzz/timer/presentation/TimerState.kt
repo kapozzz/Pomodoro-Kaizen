@@ -15,7 +15,8 @@ data class TimerState(
     val minutes: MutableState<Int>,
     val percentage: MutableState<Float>,
     val isWorking: MutableState<Boolean>,
-    val program: MutableState<List<PomodoroStage>>
+    val program: MutableState<List<PomodoroStage>>,
+    val notificationsIsEnabled: MutableState<Boolean>
 ) : UiState {
     companion object {
         fun getDefault(): TimerState {
@@ -25,7 +26,8 @@ data class TimerState(
                 minutes = mutableIntStateOf(0),
                 percentage = mutableFloatStateOf(0f),
                 isWorking = mutableStateOf(false),
-                program = mutableStateOf(PomodoroStage.defaultProgram)
+                program = mutableStateOf(PomodoroStage.defaultProgram),
+                notificationsIsEnabled = mutableStateOf(true)
             )
         }
     }
@@ -34,10 +36,12 @@ data class TimerState(
 sealed class TimerEvent : UiEvent {
     data object ResetTimer : TimerEvent()
     data object SwitchTimer: TimerEvent()
+    data class SwitchNotifications(val enabled: Boolean): TimerEvent()
 }
 
 sealed class TimerEffect : UiEffect {
 
     data object TimeExpires : TimerEffect()
+    data object TimerIsStarted: TimerEffect()
 
 }
