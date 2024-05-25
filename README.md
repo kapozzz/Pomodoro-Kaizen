@@ -1,4 +1,4 @@
-**Pomodoro Kaizen!**
+## Pomodoro Kaizen!
 <div id="header" align="start">
 <img src="screenshots/timer_screen.jpg" align="start"
 width="200"hspace="10" vspace="10">
@@ -27,6 +27,14 @@ The technique involves increasing work efficiency with less time spent through d
 
 **What is kaizen?**
 Kaizen is a Japanese philosophy or practice that focuses on continuous process improvement in manufacturing, development, supporting business processes and management, and all aspects of life.
+
+## Based on
+
+- Jetpack Compose
+- Dagger Hilt
+
+**Clean Architecture and MVI**
+
 
 
 

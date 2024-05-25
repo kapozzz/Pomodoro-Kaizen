@@ -57,6 +57,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(project(":core:ui"))
+    implementation(project(":core:common"))
 
 
 }

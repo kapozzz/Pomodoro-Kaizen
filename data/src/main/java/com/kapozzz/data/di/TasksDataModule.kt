@@ -2,7 +2,10 @@ package com.kapozzz.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.kapozzz.data.impls.TasksRepositoryImpl
 import com.kapozzz.data.room.TasksDatabase
+import com.kapozzz.domain.repositories.TasksRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,7 +14,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class TasksDataModule {
+abstract class TasksDataModule {
     @Provides
     fun provideTasksDatabase(@ApplicationContext context: Context): TasksDatabase {
         return Room.databaseBuilder(
@@ -19,4 +22,7 @@ class TasksDataModule {
             TasksDatabase::class.java, "tasks-database"
         ).build()
     }
+
+    @Binds
+    abstract fun provideTasksRepository(repo: TasksRepositoryImpl): TasksRepository
 }

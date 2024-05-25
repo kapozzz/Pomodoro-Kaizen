@@ -6,9 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.kapozzz.common.navigation.Features
+import com.kapozzz.common.navigation.LocalAppNavigator
+import com.kapozzz.common.navigation.AppNavigatorImpl
 import com.kapozzz.pomodoro_kaizen.navigation.AppNavGraph
 import com.kapozzz.pomodoro_kaizen.navigation.NavigationProvider
 import com.kapozzz.presentation.root_components.AppRootScaffold
@@ -28,17 +31,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             AppTheme {
-                AppRootScaffold {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .then(it)
-                    ) {
-                        AppNavGraph(
-                            navController = navController,
-                            navigationProvider = navProvider,
-                            startDestination = Features.Timer.NESTED_ROUTE
-                        )
+                CompositionLocalProvider(
+                    LocalAppNavigator provides AppNavigatorImpl(navController)
+                ) {
+                    AppRootScaffold {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .then(it)
+                        ) {
+                            AppNavGraph(
+                                navController = navController,
+                                navigationProvider = navProvider,
+                                startDestination = Features.Tasks.NESTED_ROUTE
+                            )
+                        }
                     }
                 }
             }

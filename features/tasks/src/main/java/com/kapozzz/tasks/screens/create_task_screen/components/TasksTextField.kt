@@ -51,11 +51,11 @@ fun TasksTextField(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(16.dp))
-            .border(
-                width = 1.dp,
-                color = AppTheme.colors.containerOutline,
-                shape = RoundedCornerShape(16.dp)
-            )
+//            .border(
+//                width = 1.dp,
+//                color = AppTheme.colors.containerOutline,
+//                shape = RoundedCornerShape(16.dp)
+//            )
             .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(16.dp)

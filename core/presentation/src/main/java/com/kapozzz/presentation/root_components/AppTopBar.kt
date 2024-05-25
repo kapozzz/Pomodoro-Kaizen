@@ -1,6 +1,7 @@
 package com.kapozzz.presentation.root_components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +20,7 @@ import com.kapozzz.ui.AppTheme
 fun AppTopBar(
     title: String,
     onBackClick: () -> Unit,
+    actions: @Composable RowScope.() -> Unit
 ) {
     TopAppBar(
         modifier = Modifier.background(AppTheme.colors.container),
@@ -37,19 +39,21 @@ fun AppTopBar(
                 )
             }
         },
+        actions = actions
     )
 }
 
 data class AppTopBarState(
     val title: MutableState<String>,
     val onBackClick: MutableState<() -> Unit>,
-    val enabled: MutableState<Boolean>
+    val enabled: MutableState<Boolean>,
+    val actions: MutableState<@Composable RowScope.() -> Unit>
 )
 
-@Composable
-@Preview
-private fun TopBarPreview() {
-    AppTheme {
-        AppTopBar(title = "New task", onBackClick = { /*TODO*/ })
-    }
-}
+//@Composable
+//@Preview
+//private fun TopBarPreview() {
+//    AppTheme {
+//        AppTopBar(title = "New task", onBackClick = { /*TODO*/ })
+//    }
+//}
