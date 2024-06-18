@@ -1,16 +1,19 @@
 package com.kapozzz.tasks.screens.create_task_screen
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.kapozzz.common.ui_acrh.BaseViewModel
 import com.kapozzz.domain.models.Step
 import com.kapozzz.domain.models.Task
 import com.kapozzz.domain.repositories.TasksRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateTaskViewModel @Inject constructor(
-    private val tasksRepository: TasksRepository
+    private val tasksRepository: TasksRepository,
 ) : BaseViewModel<CreateTaskEvent, CreateTaskState, CreateTaskEffect>() {
 
     override fun createInitialState(): CreateTaskState {
@@ -45,30 +48,46 @@ class CreateTaskViewModel @Inject constructor(
         }
     }
 
+    fun initializeTask(id: String) {
+        viewModelScope.launch {
+            val task = tasksRepository.getTaskById(id)
+            with(currentState) {
+                name.value = task.name
+                deadline.value = task.deadline
+                steps.value = task.steps
+                this.id.value = task.id
+                program.value = task.program
+                steps.value = task.steps
+            }
+        }
+    }
+
     private fun validateTaskAndSave() {
-        with(currentState) {
-            when {
-                name.value.trim().isEmpty() -> {
-                    setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.EmptyName))
-                }
-                steps.value.isEmpty() -> {
-                    setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.EmptySteps))
-                }
-                else -> {
-                    try {
-                        val task = Task(
-                            id = Task.generateId(),
-                            name = name.value,
-                            steps = steps.value,
-                            program = program.value,
-                            deadline = deadline.value
-                        )
-                        tasksRepository.addTask(task)
-                        setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.SaveComplete))
-                        setEffect(CreateTaskEffect.Back)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.UnknownError))
+        viewModelScope.launch(Dispatchers.IO) {
+            with(currentState) {
+                when {
+                    name.value.trim().isEmpty() -> {
+                        setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.EmptyName))
+                    }
+                    steps.value.isEmpty() -> {
+                        setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.EmptySteps))
+                    }
+                    else -> {
+                        try {
+                            val task = Task(
+                                id = id.value,
+                                name = name.value,
+                                steps = steps.value,
+                                program = program.value,
+                                deadline = deadline.value
+                            )
+                            tasksRepository.addTask(task)
+                            setEffect(CreateTaskEffect.SaveComplete)
+                            setEffect(CreateTaskEffect.Back)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.UnknownError))
+                        }
                     }
                 }
             }

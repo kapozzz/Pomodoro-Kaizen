@@ -30,6 +30,9 @@ object AppUiComponents {
     val appNavigator: AppNavigator
         @Composable
         get() = LocalAppNavigator.current
+    val snackBarState: SnackbarHostState
+        @Composable
+        get() = LocalSnackBarState.current
 }
 
 

@@ -7,24 +7,24 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TasksRepositoryImpl @Inject constructor(
-    private val database: TasksDatabase
+    database: TasksDatabase
 ) : TasksRepository {
     
     private val dao = database.tasksDao()
 
-    override fun getTasks(): Flow<Task> {
+    override suspend fun getTasks(): Flow<List<Task>> {
         return dao.getTasks()
     }
 
-    override fun getTaskById(id: Int): Task {
+    override suspend fun getTaskById(id: String): Task {
         return dao.getTaskById(id)
     }
 
-    override fun addTask(task: Task) {
+    override suspend fun addTask(task: Task) {
         dao.addTask(task)
     }
 
-    override fun deleteTask(task: Task) {
+    override suspend fun deleteTask(task: Task) {
         dao.deleteTask(task)
     }
 }

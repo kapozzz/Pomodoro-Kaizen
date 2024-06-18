@@ -1,11 +1,8 @@
 package com.kapozzz.ui.type
 
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.kapozzz.ui.type.aBeeZeeFontsFamily
-import com.kapozzz.ui.type.acmeFontFamily
 
 object AppTypo {
 
@@ -17,7 +14,15 @@ object AppTypo {
         letterSpacing = 0.5.sp
     )
 
-    val bigBody = TextStyle(
+    val smallTitle = TextStyle(
+        fontFamily = acmeFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 26.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.5.sp
+    )
+
+    val largeBody = TextStyle(
         fontFamily = aBeeZeeFontsFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,

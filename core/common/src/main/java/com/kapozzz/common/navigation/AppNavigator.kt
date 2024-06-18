@@ -7,12 +7,24 @@ val LocalAppNavigator = staticCompositionLocalOf<AppNavigator> { error("Navigato
 
 interface AppNavigator {
     fun back()
+    fun navigateToAddTask(id: String? = null)
+    fun navigateToTimer(id: String? = null)
 }
 
 class AppNavigatorImpl(
     private val navController: NavController
-): AppNavigator {
+) : AppNavigator {
     override fun back() {
         navController.popBackStack()
+    }
+
+    override fun navigateToAddTask(id: String?) {
+        val path = Features.Tasks.createTaskRouteWithId(id)
+        navController.navigate(path)
+    }
+
+    override fun navigateToTimer(id: String?) {
+        val path = Features.Timer.NESTED_ROUTE + if (id != null) "?id=$id" else ""
+        navController.navigate(path)
     }
 }

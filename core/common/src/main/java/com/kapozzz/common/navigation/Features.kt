@@ -14,12 +14,12 @@ object Features {
 
         const val TASKS_ROUTE = "tasks_route"
 
-        const val CREATE_TASK_ROUTE = "create_task"
+        const val CREATE_TASK_ROUTE = "create_task?id={id}"
 
-        const val TASK_ROUTE = "task/{id}"
+        private const val CREATE_TASK_ROUTE_WITHOUT_ID = "create_task"
 
-        fun taskRouteWithId(id: Int): String {
-            return "task/{$id}"
+        fun createTaskRouteWithId(id: String?): String {
+            return CREATE_TASK_ROUTE_WITHOUT_ID + if (id != null) "?id=$id" else ""
         }
 
     }
