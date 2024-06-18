@@ -2,6 +2,10 @@
 <div id="header" align="start">
 <img src="screenshots/timer_screen.jpg" align="start"
 width="200"hspace="10" vspace="10">
+  <img src="screenshots/tasks_1.jpg" align="start"
+width="200"hspace="10" vspace="10">
+  <img src="screenshots/tasks-2.jpg" align="start"
+width="200"hspace="10" vspace="10">
 </div>
 
 
