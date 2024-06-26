@@ -1,28 +1,52 @@
 package com.kapozzz.timer.presentation.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.kapozzz.timer.presentation.model.PomodoroStage
+import com.kapozzz.domain.models.Step
+import com.kapozzz.domain.models.Tomato
 import com.kapozzz.ui.AppTheme
 
 @Composable
 internal fun TimerStage(
-    stage: PomodoroStage,
+    tomato: Tomato,
+    step: Step,
+    stepNumber: Int,
     modifier: Modifier = Modifier
 ) {
     AnimatedContent(
-        targetState = stage,
-        modifier = modifier
+        targetState = tomato,
+        modifier = modifier,
+        label = ""
     ) {
-        Text(
-            modifier = Modifier.padding(bottom = 16.dp),
-            text = if (it == PomodoroStage.WorkPomodoro) "Pomodoro Kaizen!" else "Time to relax!",
-            color = AppTheme.colors.onBackground,
-            style = AppTheme.typo.mediumTitle
-        )
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = if (it == Tomato.Work) "${stepNumber + 1}. ${step.title}" else "Time to relax!",
+                color = AppTheme.colors.onBackground,
+                style = AppTheme.typo.mediumTitleBold,
+                textAlign = TextAlign.Start
+            )
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(AppTheme.colors.outline)
+            )
+        }
     }
 }

@@ -5,4 +5,8 @@
     <string name="timer_stop_button">Stop</string>
     <string name="progress_notification_title">Current tomato progress</string>
     <string name="there_s_time_left_progress_notification_body">There\'s time left</string>
+    <string name="task_completed">Task completed!</string>
+    <string name="task_completed_animation">Task completed animation</string>
+    <string name="hide">hide</string>
+    <string name="more">more</string>
 </resources>

@@ -97,7 +97,7 @@ fun TaskSettings(
                             color = AppTheme.colors.onBackground
                         )
                     }, onClick = {
-                        newProgram(TomatoProgram.defaultPrograms.last())
+                        newProgram(TomatoProgram.defaultPrograms.first())
                         programsIsVisible.value = false
                     })
                     DropdownMenuItem(text = {
@@ -107,7 +107,7 @@ fun TaskSettings(
                             color = AppTheme.colors.onBackground
                         )
                     }, onClick = {
-                        newProgram(TomatoProgram.defaultPrograms.first())
+                        newProgram(TomatoProgram.defaultPrograms.last())
                         programsIsVisible.value = false
                     })
                 }

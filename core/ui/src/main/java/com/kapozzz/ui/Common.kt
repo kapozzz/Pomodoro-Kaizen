@@ -25,7 +25,8 @@ data class Colors(
     val onBackground: Color,
     val hint: Color,
     val outline: Color,
-    val error: Color
+    val error: Color,
+    val tapColor: Color
 )
 
 enum class ColorStyle() {

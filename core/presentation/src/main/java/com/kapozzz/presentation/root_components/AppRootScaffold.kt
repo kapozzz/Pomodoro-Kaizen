@@ -18,7 +18,8 @@ import com.kapozzz.common.navigation.AppNavigator
 val LocalTopBarState = staticCompositionLocalOf<AppTopBarState> { error("top bar not provided") }
 val LocalFloatingButtonState =
     staticCompositionLocalOf<AppFloatingButtonState> { error("floating button not provided") }
-val LocalSnackBarState = staticCompositionLocalOf<SnackbarHostState> { error("snackbar not provided") }
+val LocalSnackBarState =
+    staticCompositionLocalOf<SnackbarHostState> { error("snackbar not provided") }
 
 object AppUiComponents {
     val topBarState: AppTopBarState
@@ -49,6 +50,7 @@ fun AppRootScaffold(
         AppTopBarState(
             title = mutableStateOf("Top Bar Name"),
             onBackClick = mutableStateOf({}),
+            onBackClickEnabled = mutableStateOf(false),
             enabled = mutableStateOf(false),
             actions = mutableStateOf(@Composable {
 
@@ -75,6 +77,7 @@ fun AppRootScaffold(
                     AppTopBar(
                         title = topBarState.title.value,
                         onBackClick = topBarState.onBackClick.value,
+                        onBackClickEnabled = topBarState.onBackClickEnabled.value,
                         actions = topBarState.actions.value
                     )
                 }

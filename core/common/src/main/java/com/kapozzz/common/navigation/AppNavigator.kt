@@ -2,6 +2,7 @@ package com.kapozzz.common.navigation
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 
 val LocalAppNavigator = staticCompositionLocalOf<AppNavigator> { error("Navigator not provided") }
 
@@ -20,11 +21,11 @@ class AppNavigatorImpl(
 
     override fun navigateToAddTask(id: String?) {
         val path = Features.Tasks.createTaskRouteWithId(id)
-        navController.navigate(path)
+        navController.navigate(route = path)
     }
 
     override fun navigateToTimer(id: String?) {
-        val path = Features.Timer.NESTED_ROUTE + if (id != null) "?id=$id" else ""
+        val path = Features.Timer.createTimerRouteWithId(id)
         navController.navigate(path)
     }
 }

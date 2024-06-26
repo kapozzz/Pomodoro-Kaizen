@@ -15,11 +15,15 @@ data class TomatoProgram(
                 longRestTime = 30,
             ),
             TomatoProgram(
-                name = "fase",
-                workTime = 10,
+                name = "fast",
+                workTime = 2,
                 restTime = 1,
-                longRestTime = 5,
+                longRestTime = 3,
             )
         )
     }
+}
+
+enum class Tomato {
+    Work, Rest, LongRest
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
@@ -17,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -25,6 +27,7 @@ import com.kapozzz.common.navigation.LocalAppNavigator
 import com.kapozzz.domain.models.Task
 import com.kapozzz.domain.models.TomatoProgram
 import com.kapozzz.presentation.root_components.AppUiComponents
+import com.kapozzz.tasks.R
 import com.kapozzz.tasks.screens.list_screen.components.TaskCard
 import com.kapozzz.ui.AppTheme
 import kotlinx.coroutines.flow.SharedFlow
@@ -40,24 +43,26 @@ internal fun ListScreen(
     val lifecycle = LocalLifecycleOwner.current
 
     with(AppUiComponents) {
-        topBarState.title.value = "Tasks"
+        topBarState.title.value = stringResource(R.string.tasks)
         topBarState.actions.value = {}
         topBarState.enabled.value = true
         topBarState.onBackClick.value = { navigator.back() }
+        topBarState.onBackClickEnabled.value = false
         floatingButtonState.enabled.value = true
         floatingButtonState.content.value = {
             // CREATE NEW TASK BUTTON
             IconButton(
                 modifier = Modifier
-                    .size(45.dp)
-                    .clip(CircleShape)
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(16.dp))
                     .background(AppTheme.colors.primary),
                 onClick = { sendEvent(ListScreenEvent.CreateTask) }
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    tint = AppTheme.colors.onPrimary
+                    tint = AppTheme.colors.onPrimary,
+                    modifier = Modifier.size(30.dp)
                 )
             }
         }
@@ -74,7 +79,7 @@ internal fun ListScreen(
                         navigator.navigateToAddTask(effect.id)
                     }
                     is ListScreenEffect.OnTaskTap -> {
-
+                        navigator.navigateToTimer(effect.id)
                     }
                 }
             }

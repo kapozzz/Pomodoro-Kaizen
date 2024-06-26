@@ -5,7 +5,13 @@ object Features {
 
         const val NESTED_ROUTE = "timer_nested_route"
 
-        const val SCREEN_ROUTE = "timer_screen_route"
+        const val SCREEN_ROUTE = "timer_screen_route?id={id}"
+
+        private const val SCREEN_ROUTE_WITHOUT_ID = "timer_screen_route"
+
+        fun createTimerRouteWithId(id: String?): String {
+            return SCREEN_ROUTE_WITHOUT_ID + if (id != null) "?id=$id" else ""
+        }
 
     }
     object Tasks {

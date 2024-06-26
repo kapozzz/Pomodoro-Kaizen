@@ -6,6 +6,14 @@ import androidx.compose.ui.unit.sp
 
 object AppTypo {
 
+    val mediumTitleBold = TextStyle(
+        fontFamily = acmeFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 36.sp,
+        lineHeight = 38.sp,
+        letterSpacing = 0.5.sp
+    )
+
     val mediumTitle = TextStyle(
         fontFamily = acmeFontFamily,
         fontWeight = FontWeight.Normal,

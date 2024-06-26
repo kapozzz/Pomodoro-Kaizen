@@ -7,10 +7,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +18,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,8 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.kapozzz.common.navigation.LocalAppNavigator
+import com.kapozzz.presentation.root_components.AppUiComponents
 import com.kapozzz.timer.R
+import com.kapozzz.timer.presentation.components.TaskCompleted
 import com.kapozzz.timer.presentation.components.TimerCircularProgressBar
+import com.kapozzz.timer.presentation.components.TimerDescription
 import com.kapozzz.timer.presentation.components.TimerStage
 import com.kapozzz.ui.AppTheme
 import kotlinx.coroutines.flow.SharedFlow
@@ -46,6 +53,7 @@ internal fun TimerScreen(
 ) {
 
     val context = LocalContext.current
+    val navigator = LocalAppNavigator.current
 
     val requestPermissionLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -62,8 +70,8 @@ internal fun TimerScreen(
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             effects.collect {
                 when (it) {
-                    TimerEffect.TimeExpires -> TODO()
-                    TimerEffect.TimerIsStarted -> {
+                    is TimerEffect.TimeExpires -> TODO()
+                    is TimerEffect.TimerIsStarted -> {
                         if (ContextCompat.checkSelfPermission(
                                 context,
                                 Manifest.permission.POST_NOTIFICATIONS
@@ -74,9 +82,20 @@ internal fun TimerScreen(
                             }
                         }
                     }
+
+                    is TimerEffect.OnBackClick -> {
+                        navigator.back()
+                    }
                 }
             }
         }
+    }
+
+    with(AppUiComponents) {
+        topBarState.enabled.value = true
+        topBarState.title.value = state.task.value.name
+        topBarState.onBackClick.value = { navigator.back() }
+        floatingButtonState.enabled.value = false
     }
 
     Box(
@@ -88,21 +107,57 @@ internal fun TimerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 200.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
-            TimerStage(stage = state.program.value[state.stage.value])
-            Timer(
-                state = state,
-                sendEvent = sendEvent,
-                modifier = Modifier.padding(horizontal = 16.dp)
+            TimerStage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 60.dp),
+                tomato = state.tomato.value,
+                step = state.step.value,
+                stepNumber = state.stepIndex.value
+            )
+            // DESCRIPTION
+            TimerDescription(
+                modifier = Modifier.padding(top = 4.dp),
+                description = state.step.value.description
+            )
+
+        }
+        //TIMER
+        Timer(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 300.dp),
+            state = state,
+            sendEvent = sendEvent,
+        )
+        // BACK BUTTON
+        IconButton(
+            onClick = { sendEvent(TimerEvent.OnBackClick) },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .size(60.dp)
+        ) {
+            Icon(
+                modifier = Modifier.size(30.dp),
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = null,
+                tint = AppTheme.colors.onBackground
             )
         }
-
+        // TASK COMPLETED ANIMATED VIEW
+        TaskCompleted(
+            isCompleted = state.isCompleted.value,
+            onBackClick = { navigator.back() },
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Timer(
     state: TimerState,
@@ -121,7 +176,7 @@ private fun Timer(
             seconds = state.seconds.value
         )
         AnimatedContent(
-            targetState = state.isWorking.value,
+            targetState = state.isWorking.value, label = "",
         ) {
             Icon(
                 modifier = Modifier

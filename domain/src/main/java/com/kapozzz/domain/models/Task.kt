@@ -17,5 +17,14 @@ data class Task(
 
     companion object {
         fun generateId(): String = UUID.randomUUID().toString()
+        fun getDefault(): Task {
+            return Task(
+                id = "default_empty_id",
+                name = "",
+                steps = listOf(Step.getCompletedEmptyStep()),
+                program = TomatoProgram.defaultPrograms.first(),
+                deadline = 0L
+            )
+        }
     }
 }

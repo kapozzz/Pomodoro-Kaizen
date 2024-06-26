@@ -1,5 +1,6 @@
 package com.kapozzz.tasks.screens.create_task_screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,6 +59,7 @@ fun CreateTaskScreen(
             it.title.value = "New task"
             it.enabled.value = true
             it.onBackClick.value = { sendEvent(CreateTaskEvent.Back) }
+            it.onBackClickEnabled.value = true
             it.actions.value = {
                 IconButton(onClick = {
                     state.settingsIsVisible.value = !state.settingsIsVisible.value
@@ -150,7 +152,7 @@ private fun Screen(
     sendEvent: (event: CreateTaskEvent) -> Unit
 ) {
 
-    val bottomSheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Box(
         modifier = Modifier
@@ -171,6 +173,7 @@ private fun Screen(
                     program = state.program.value,
                     newProgram = {
                         state.program.value = it
+                        Log.i("PROGRAM", "NEW: $it")
                     },
                     deadline = state.deadline.value,
                     newDeadline = {

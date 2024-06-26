@@ -9,4 +9,15 @@ val greenContainer = Color(0xFF002107)
 val yellow = Color(0xFF211c00)
 val yellowContainer = Color(0xFFf5e389)
 val light = Color(0xFFf9f9ff)
+val lightGray = Color(0xFFE5E5E5)
+
+
+val dark = Color(0xFF1a1111)
+val darkContainer = Color(0xFF413736)
+val darkOutline = Color(0xFF524343)
+
+
+
+
+
 
