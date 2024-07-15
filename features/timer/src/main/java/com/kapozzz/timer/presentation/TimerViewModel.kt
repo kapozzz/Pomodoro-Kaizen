@@ -146,16 +146,25 @@ class TimerViewModel @Inject constructor(
         }
     }
 
+    private fun taskComplete() {
+        currentState.isCompleted.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            tasksRepository.addTask(currentState.task.value)
+        }
+    }
+
     private fun isNextStepExist() {
         val nextStep = currentState.steps.value.firstOrNull { !it.isCompleted }
-        if (nextStep == null) currentState.isCompleted.value = true
+        if (nextStep == null) {
+            taskComplete()
+        }
     }
 
     private fun nextStep() {
         with(currentState) {
             val nextStep = steps.value.firstOrNull { !it.isCompleted }
             if (nextStep == null) {
-                isCompleted.value = true
+                taskComplete()
             } else {
                 val index = steps.value.indexOfFirst { !it.isCompleted }
                 stepIndex.value = index

@@ -13,7 +13,7 @@ class TasksRepositoryImpl @Inject constructor(
     private val dao = database.tasksDao()
 
     override suspend fun getTasks(): Flow<List<Task>> {
-        return dao.getTasks()
+        return dao.getUncompletedTasks()
     }
 
     override suspend fun getTaskById(id: String): Task {
@@ -24,7 +24,7 @@ class TasksRepositoryImpl @Inject constructor(
         dao.addTask(task)
     }
 
-    override suspend fun deleteTask(task: Task) {
-        dao.deleteTask(task)
+    override suspend fun deleteTask(id: String) {
+        dao.deleteTask(id)
     }
 }

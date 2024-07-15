@@ -24,7 +24,8 @@ data class CreateTaskState(
     val currentStateIsCompleted: MutableState<Boolean>,
     val currentStepIndex: MutableState<Int>,
     val bottomSheetIsVisible: MutableState<Boolean>,
-    val settingsIsVisible: MutableState<Boolean>
+    val settingsIsVisible: MutableState<Boolean>,
+    val taskId: MutableState<String?>
 ) : UiState {
     companion object {
         fun getDefault(): CreateTaskState {
@@ -39,7 +40,8 @@ data class CreateTaskState(
                 currentStateIsCompleted = mutableStateOf(false),
                 currentStepIndex = mutableIntStateOf(0),
                 bottomSheetIsVisible = mutableStateOf(false),
-                settingsIsVisible = mutableStateOf(false)
+                settingsIsVisible = mutableStateOf(false),
+                taskId = mutableStateOf(null)
             )
         }
     }
@@ -52,6 +54,7 @@ sealed class CreateTaskEvent : UiEvent {
     data object AddNewStep : CreateTaskEvent()
     data object SaveTask: CreateTaskEvent()
     data object Back: CreateTaskEvent()
+    data object DeleteTask: CreateTaskEvent()
 }
 
 sealed class CreateTaskEffect : UiEffect {

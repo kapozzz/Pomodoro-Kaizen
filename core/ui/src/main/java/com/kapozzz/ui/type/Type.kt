@@ -38,6 +38,14 @@ object AppTypo {
         letterSpacing = 0.5.sp
     )
 
+    val mediumDefaultTittle = TextStyle(
+        fontFamily = aBeeZeeFontsFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.5.sp
+    )
+
     val mediumBody = TextStyle(
         fontFamily = aBeeZeeFontsFamily,
         fontWeight = FontWeight.Normal,
@@ -51,6 +59,14 @@ object AppTypo {
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    )
+
+    val megaLarge = TextStyle(
+        fontFamily = acmeFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 46.sp,
+        lineHeight = 48.sp,
         letterSpacing = 0.5.sp
     )
 

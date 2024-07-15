@@ -45,19 +45,37 @@ class CreateTaskViewModel @Inject constructor(
             is CreateTaskEvent.Back -> {
                 setEffect(CreateTaskEffect.Back)
             }
+
+            is CreateTaskEvent.DeleteTask -> {
+                deleteTask()
+            }
         }
     }
 
     fun initializeTask(id: String) {
         viewModelScope.launch {
+            currentState.taskId.value = id
             val task = tasksRepository.getTaskById(id)
-            with(currentState) {
-                name.value = task.name
-                deadline.value = task.deadline
-                steps.value = task.steps
-                this.id.value = task.id
-                program.value = task.program
-                steps.value = task.steps
+            try {
+                with(currentState) {
+                    name.value = task.name
+                    deadline.value = task.deadline
+                    steps.value = task.steps
+                    this.id.value = task.id
+                    program.value = task.program
+                    steps.value = task.steps
+                }
+            } catch (e: NullPointerException) {
+                Log.w("Pomodoro Kaizen", "task initialization before delete")
+            }
+        }
+    }
+
+    private fun deleteTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            currentState.taskId.value?.let {
+                setEffect(CreateTaskEffect.Back)
+                tasksRepository.deleteTask(it)
             }
         }
     }

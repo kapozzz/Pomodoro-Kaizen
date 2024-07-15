@@ -14,12 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kapozzz.common.navigation.LocalAppNavigator
 import com.kapozzz.common.navigation.AppNavigator
+import com.kapozzz.presentation.components.AppDialog
+import com.kapozzz.presentation.components.AppDialogState
+import com.kapozzz.presentation.components.LocalAppDialog
 
 val LocalTopBarState = staticCompositionLocalOf<AppTopBarState> { error("top bar not provided") }
 val LocalFloatingButtonState =
     staticCompositionLocalOf<AppFloatingButtonState> { error("floating button not provided") }
 val LocalSnackBarState =
     staticCompositionLocalOf<SnackbarHostState> { error("snackbar not provided") }
+
 
 object AppUiComponents {
     val topBarState: AppTopBarState
@@ -65,10 +69,20 @@ fun AppRootScaffold(
         )
     }
 
+    val appDialogState = remember {
+        AppDialogState(
+            isVisible = mutableStateOf(false),
+            message = mutableStateOf(""),
+            onAccess = mutableStateOf({}),
+            onDismiss = mutableStateOf({})
+        )
+    }
+
     CompositionLocalProvider(
         LocalTopBarState provides topBarState,
         LocalFloatingButtonState provides floatingButtonState,
-        LocalSnackBarState provides snackBarState
+        LocalSnackBarState provides snackBarState,
+        LocalAppDialog provides appDialogState
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -93,6 +107,7 @@ fun AppRootScaffold(
             snackbarHost = { SnackbarHost(snackBarState) }
         ) {
             content(Modifier.padding(it))
+            AppDialog(state = appDialogState)
         }
     }
 }

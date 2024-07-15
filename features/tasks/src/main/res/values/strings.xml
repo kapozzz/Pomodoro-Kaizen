@@ -7,4 +7,9 @@
     <string name="add_new_step">Add new step</string>
     <string name="save_button">Save</string>
     <string name="tasks">Tasks</string>
+    <string name="new_task">New task</string>
+    <string name="do_you_want_to_delete_the_task">Do you want to delete the task?</string>
+    <string name="create_first_task">Create first task</string>
+    <string name="you_have_no_tasks">You have no tasks :(</string>
+    <string name="you_do_not_yet_have_any_completed_tasks">You do not yet have any completed tasks</string>
 </resources>

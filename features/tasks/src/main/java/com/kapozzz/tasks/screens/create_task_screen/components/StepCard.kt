@@ -38,7 +38,7 @@ fun StepCard(
         modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(8.dp))
             .background(AppTheme.colors.container)
             .clickable { onClick() },
         contentAlignment = Alignment.Center

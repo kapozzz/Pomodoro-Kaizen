@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -66,6 +67,7 @@ internal fun TimerScreen(
 
 
     val lifecycle = LocalLifecycleOwner.current
+
     LaunchedEffect(key1 = true) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             effects.collect {
@@ -129,8 +131,8 @@ internal fun TimerScreen(
         //TIMER
         Timer(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 300.dp),
+                .align(Alignment.Center)
+                .height(500.dp),
             state = state,
             sendEvent = sendEvent,
         )

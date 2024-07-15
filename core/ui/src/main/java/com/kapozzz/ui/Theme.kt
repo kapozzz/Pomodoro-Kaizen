@@ -22,7 +22,4 @@ fun AppTheme(
         LocalTypo provides AppTypo,
         content = content
     )
-    MaterialTheme {
-
-    }
 }

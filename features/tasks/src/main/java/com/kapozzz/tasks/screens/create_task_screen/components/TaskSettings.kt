@@ -1,8 +1,14 @@
 package com.kapozzz.tasks.screens.create_task_screen.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +43,8 @@ fun TaskSettings(
     newProgram: (TomatoProgram) -> Unit,
     deadline: Long,
     newDeadline: (Long) -> Unit,
+    deleteIsVisible: Boolean,
+    onDeleteClick: () -> Unit,
     isVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -49,15 +57,15 @@ fun TaskSettings(
     }
     AnimatedVisibility(
         visible = isVisible,
-        enter = fadeIn(),
-        exit = fadeOut(),
+        enter = expandVertically() + scaleIn(),
+        exit = shrinkVertically() + scaleOut(),
         modifier = modifier
             .fillMaxWidth()
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(8.dp))
                 .background(AppTheme.colors.container),
             contentAlignment = Alignment.Center
         ) {
@@ -70,8 +78,8 @@ fun TaskSettings(
             ) {
                 TextButton(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
                         .background(AppTheme.colors.background),
                     onClick = { programsIsVisible.value = !programsIsVisible.value }
                 ) {
@@ -113,9 +121,9 @@ fun TaskSettings(
                 }
                 TextButton(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
                         .fillMaxWidth()
                         .padding(top = 8.dp)
+                        .clip(RoundedCornerShape(8.dp))
                         .background(AppTheme.colors.background),
                     onClick = { datePickerIsVisible.value = true }
                 ) {
@@ -146,6 +154,23 @@ fun TaskSettings(
                             }
                         }) {
                         DatePicker(state = datePickerState)
+                    }
+                }
+                // DELETE BUTTON
+                if (deleteIsVisible) {
+                    TextButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(AppTheme.colors.background),
+                        onClick = { onDeleteClick() }
+                    ) {
+                        Text(
+                            text = "Delete task",
+                            style = AppTheme.typo.mediumBody,
+                            color = AppTheme.colors.onBackground
+                        )
                     }
                 }
             }

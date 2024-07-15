@@ -20,10 +20,10 @@ internal val baseLightPalette = Colors(
     outline = Color.LightGray,
     error = Color.Red,
     hint = Color.Gray,
-    container = light,
+    container = lightGray,
     onContainer = Color.Black,
     containerOutline = Color.Black,
-    tapColor = lightGray
+    tapColor = darkGray
 )
 
 internal val baseDarkPalette = Colors(

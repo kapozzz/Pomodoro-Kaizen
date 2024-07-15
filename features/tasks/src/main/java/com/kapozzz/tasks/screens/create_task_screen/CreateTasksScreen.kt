@@ -1,6 +1,7 @@
 package com.kapozzz.tasks.screens.create_task_screen
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,11 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,6 +38,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.kapozzz.common.extentions.toFormattedDateString
 import com.kapozzz.common.navigation.AppNavigator
 import com.kapozzz.presentation.components.AppButton
+import com.kapozzz.presentation.components.LocalAppDialog
 import com.kapozzz.presentation.root_components.AppUiComponents
 import com.kapozzz.tasks.R
 import com.kapozzz.tasks.screens.create_task_screen.components.AddNewTaskBottomSheet
@@ -56,7 +60,7 @@ fun CreateTaskScreen(
 ) {
     with(AppUiComponents) {
         topBarState.also {
-            it.title.value = "New task"
+            it.title.value = stringResource(R.string.new_task)
             it.enabled.value = true
             it.onBackClick.value = { sendEvent(CreateTaskEvent.Back) }
             it.onBackClickEnabled.value = true
@@ -74,17 +78,18 @@ fun CreateTaskScreen(
         floatingButtonState.also {
             it.enabled.value = true
             it.content.value = {
-                TextButton(
+                IconButton(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(8.dp))
                         .background(AppTheme.colors.primary),
                     onClick = { sendEvent(CreateTaskEvent.SaveTask) }
                 ) {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = stringResource(R.string.save_button),
-                        style = AppTheme.typo.largeBody,
-                        color = AppTheme.colors.onPrimary
+                    Icon(
+                        modifier = Modifier.size(36.dp),
+                        imageVector = Icons.Default.Done,
+                        contentDescription = null,
+                        tint = AppTheme.colors.onPrimary
                     )
                 }
             }
@@ -117,6 +122,7 @@ fun handleEffect(
         is CreateTaskEffect.Back -> {
             appNavigator.back()
         }
+
         is CreateTaskEffect.SaveComplete -> {
             scope.launch {
                 withContext(Dispatchers.Main) {
@@ -124,14 +130,17 @@ fun handleEffect(
                 }
             }
         }
+
         is CreateTaskEffect.ShowMessage -> {
-            val message = when(effect.type) {
+            val message = when (effect.type) {
                 CreateTaskMessage.EmptyName -> {
                     "Empty name"
                 }
+
                 CreateTaskMessage.EmptySteps -> {
                     "Empty steps"
                 }
+
                 CreateTaskMessage.UnknownError -> {
                     "Failed to create a task"
                 }
@@ -153,6 +162,9 @@ private fun Screen(
 ) {
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val appDialog = LocalAppDialog.current
+    val deleteMessageForAppDialog = stringResource(R.string.do_you_want_to_delete_the_task)
+
 
     Box(
         modifier = Modifier
@@ -163,7 +175,7 @@ private fun Screen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(AppTheme.colors.background)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -173,13 +185,22 @@ private fun Screen(
                     program = state.program.value,
                     newProgram = {
                         state.program.value = it
-                        Log.i("PROGRAM", "NEW: $it")
                     },
                     deadline = state.deadline.value,
                     newDeadline = {
                         state.deadline.value = it
                     },
-                    isVisible = state.settingsIsVisible.value
+                    isVisible = state.settingsIsVisible.value,
+                    onDeleteClick = {
+                        appDialog.apply {
+                            isVisible.value = true
+                            message.value = deleteMessageForAppDialog
+                            onAccess.value = {
+                                sendEvent(CreateTaskEvent.DeleteTask)
+                            }
+                        }
+                    },
+                    deleteIsVisible = state.taskId.value != null
                 )
             }
             // NAME
@@ -251,7 +272,9 @@ private fun Screen(
                         sendEvent(CreateTaskEvent.AddNewStep)
                         state.bottomSheetIsVisible.value = true
                     },
-                    modifier = Modifier.padding(top = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     image = {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -279,4 +302,5 @@ private fun Screen(
         }
     }
 }
+
 

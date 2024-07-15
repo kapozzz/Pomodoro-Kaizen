@@ -110,7 +110,9 @@ fun AddNewTaskBottomSheet(
                     maxSymbols = 300
                 )
                 AppButton(
-                    modifier = Modifier.padding(top = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     name = stringResource(R.string.save),
                     onClick = {
                         if (state.currentStepTitle.value.isNotEmpty()) {

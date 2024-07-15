@@ -10,12 +10,14 @@ import com.kapozzz.domain.models.Task
 
 @Stable
 data class ListScreenState(
-    val list: MutableState<List<Task>>
+    val actualTasksList: MutableState<List<Task>>,
+    val completedTasksList: MutableState<List<Task>>
 ): UiState {
     companion object {
         fun getDefault(): ListScreenState {
             return ListScreenState(
-                list = mutableStateOf(emptyList())
+                actualTasksList = mutableStateOf(emptyList()),
+                completedTasksList = mutableStateOf(emptyList())
             )
         }
     }
@@ -23,6 +25,7 @@ data class ListScreenState(
 sealed class ListScreenEvent: UiEvent {
     data class OnTaskTap(val id: String): ListScreenEvent()
     data class OnTaskLongTap(val id: String): ListScreenEvent()
+    data class DeleteTask(val id: String): ListScreenEvent()
     data object CreateTask: ListScreenEvent()
 }
 
