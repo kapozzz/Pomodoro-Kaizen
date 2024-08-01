@@ -1,11 +1,10 @@
 ## Pomodoro Kaizen!
+<img src="https://github.com/user-attachments/assets/186889f6-adc8-4037-8e21-3f12b4ba7c24" align="start"
+width="match_parent" hspace="10" vspace="10">
 <div id="header" align="start">
-<img src="screenshots/create_task.png" align="start"
-width="200" hspace="10" vspace="10">
-<img src="screenshots/timer.png" align="start"
-width="200" hspace="10" vspace="10">
-<img src="screenshots/pomodoro.gif" align="start"
-width="200" hspace="10" vspace="10">
+  
+https://github.com/user-attachments/assets/6166c1de-4900-4460-ba27-cde6c15cf940
+
 </div>
 
 
