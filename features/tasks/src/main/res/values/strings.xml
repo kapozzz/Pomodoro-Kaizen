@@ -12,4 +12,11 @@
     <string name="create_first_task">Create first task</string>
     <string name="you_have_no_tasks">You have no tasks :(</string>
     <string name="you_do_not_yet_have_any_completed_tasks">You do not yet have any completed tasks</string>
+    <string name="rest_time">"Rest "</string>
+    <string name="work_time">"Work "</string>
+    <string name="long_rest_time">"Long "</string>
+    <string name="work_time_create">Work time:</string>
+    <string name="rest_time_create">Rest time:</string>
+    <string name="long_time_create">Long time:</string>
+    <string name="save_in_create">Save</string>
 </resources>

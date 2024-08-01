@@ -18,6 +18,7 @@
         <receiver android:name="com.kapozzz.timer.util.TimerReceiver"/>
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/Theme.Pomodoro_kaizen">
             <intent-filter>

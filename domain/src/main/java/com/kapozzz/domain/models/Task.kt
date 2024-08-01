@@ -1,9 +1,11 @@
 package com.kapozzz.domain.models
 
+import androidx.compose.runtime.Stable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
+@Stable
 @Entity(tableName = "Tasks")
 data class Task(
     @PrimaryKey val id: String,
@@ -22,7 +24,7 @@ data class Task(
                 id = "default_empty_id",
                 name = "",
                 steps = listOf(Step.getCompletedEmptyStep()),
-                program = TomatoProgram.defaultPrograms.first(),
+                program = TomatoProgram.defaultProgram,
                 deadline = 0L
             )
         }

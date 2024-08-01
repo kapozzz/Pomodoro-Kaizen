@@ -1,7 +1,5 @@
 package com.kapozzz.tasks.screens.create_task_screen
 
-import android.util.Log
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -165,7 +162,6 @@ private fun Screen(
     val appDialog = LocalAppDialog.current
     val deleteMessageForAppDialog = stringResource(R.string.do_you_want_to_delete_the_task)
 
-
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -182,16 +178,8 @@ private fun Screen(
             // SETTINGS
             item {
                 TaskSettings(
-                    program = state.program.value,
-                    newProgram = {
-                        state.program.value = it
-                    },
-                    deadline = state.deadline.value,
-                    newDeadline = {
-                        state.deadline.value = it
-                    },
-                    isVisible = state.settingsIsVisible.value,
-                    onDeleteClick = {
+                    state = state,
+                    onDeleteTaskClick = {
                         appDialog.apply {
                             isVisible.value = true
                             message.value = deleteMessageForAppDialog
@@ -200,7 +188,17 @@ private fun Screen(
                             }
                         }
                     },
-                    deleteIsVisible = state.taskId.value != null
+                    onDeleteTomatoProgramClick = {
+                        sendEvent(CreateTaskEvent.DeleteTomatoProgram(it))
+                    },
+                    onProgramSave = {
+                        sendEvent(CreateTaskEvent.SaveTomatoProgram(it))
+                    },
+                    onProgramApply = {
+                        sendEvent(CreateTaskEvent.ApplyTomatoProgram(it))
+
+                    },
+                    currentProgram = state.program
                 )
             }
             // NAME

@@ -2,6 +2,7 @@ package com.kapozzz.tasks.screens.list_screen.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,8 +14,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kapozzz.presentation.components.LocalAppDialog
 import com.kapozzz.tasks.R
@@ -29,18 +32,24 @@ internal fun CompletedTasksScreen(
 ) {
     val lazyColumnScrollState = rememberLazyListState()
     AnimatedContent(targetState = state.completedTasksList.value.isEmpty(), label = "") {
-        if (it) {
-            Text(
-                text = stringResource(R.string.you_do_not_yet_have_any_completed_tasks),
-                color = AppTheme.colors.onBackground,
-                style = AppTheme.typo.largeBody
-            )
-        } else {
-            Screen(
-                state = state,
-                sendEvent = sendEvent,
-                lazyListState = lazyColumnScrollState
-            )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (it) {
+                Text(
+                    text = stringResource(R.string.you_do_not_yet_have_any_completed_tasks),
+                    color = AppTheme.colors.onBackground,
+                    style = AppTheme.typo.largeBody,
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                Screen(
+                    state = state,
+                    sendEvent = sendEvent,
+                    lazyListState = lazyColumnScrollState
+                )
+            }
         }
     }
 }

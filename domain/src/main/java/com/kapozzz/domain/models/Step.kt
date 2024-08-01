@@ -1,5 +1,8 @@
 package com.kapozzz.domain.models
 
+import androidx.compose.runtime.Stable
+
+@Stable
 data class Step(
     val title: String,
     val description: String,

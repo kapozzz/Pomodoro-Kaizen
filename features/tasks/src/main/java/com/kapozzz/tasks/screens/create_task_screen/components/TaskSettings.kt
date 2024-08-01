@@ -2,13 +2,9 @@ package com.kapozzz.tasks.screens.create_task_screen.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,33 +15,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.kapozzz.domain.models.TomatoProgram
+import com.kapozzz.tasks.screens.create_task_screen.CreateTaskState
+import com.kapozzz.tasks.screens.create_task_screen.components.tomato_program.TomatoProgramsDialog
 import com.kapozzz.ui.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskSettings(
-    program: TomatoProgram,
-    newProgram: (TomatoProgram) -> Unit,
-    deadline: Long,
-    newDeadline: (Long) -> Unit,
-    deleteIsVisible: Boolean,
-    onDeleteClick: () -> Unit,
-    isVisible: Boolean,
+    state: CreateTaskState,
+    onDeleteTaskClick: () -> Unit,
+    onDeleteTomatoProgramClick: (TomatoProgram) -> Unit,
+    onProgramSave: (TomatoProgram) -> Unit,
+    onProgramApply: (TomatoProgram) -> Unit,
+    currentProgram: State<TomatoProgram>,
     modifier: Modifier = Modifier
 ) {
     val datePickerState = rememberDatePickerState()
@@ -56,7 +51,7 @@ fun TaskSettings(
         mutableStateOf(false)
     }
     AnimatedVisibility(
-        visible = isVisible,
+        visible = state.settingsIsVisible.value,
         enter = expandVertically() + scaleIn(),
         exit = shrinkVertically() + scaleOut(),
         modifier = modifier
@@ -89,36 +84,21 @@ fun TaskSettings(
                         color = AppTheme.colors.onBackground
                     )
                 }
-                DropdownMenu(
-                    modifier = Modifier
-                        .background(AppTheme.colors.container),
-                    expanded = programsIsVisible.value,
+                if (programsIsVisible.value) TomatoProgramsDialog(
+                    list = state.programs,
+                    onDeleteClick = {
+                        onDeleteTomatoProgramClick(it)
+                    },
                     onDismissRequest = {
                         programsIsVisible.value = false
                     },
-                    offset = DpOffset(150.dp, 0.dp)
-                ) {
-                    DropdownMenuItem(text = {
-                        Text(
-                            text = "Default",
-                            style = AppTheme.typo.smallBody,
-                            color = AppTheme.colors.onBackground
-                        )
-                    }, onClick = {
-                        newProgram(TomatoProgram.defaultPrograms.first())
+                    onProgramSave = onProgramSave,
+                    onProgramApply = {
+                        onProgramApply(it)
                         programsIsVisible.value = false
-                    })
-                    DropdownMenuItem(text = {
-                        Text(
-                            text = "Fast",
-                            style = AppTheme.typo.smallBody,
-                            color = AppTheme.colors.onBackground
-                        )
-                    }, onClick = {
-                        newProgram(TomatoProgram.defaultPrograms.last())
-                        programsIsVisible.value = false
-                    })
-                }
+                    },
+                    currentProgram = currentProgram
+                )
                 TextButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -143,7 +123,7 @@ fun TaskSettings(
                                     .background(AppTheme.colors.background),
                                 onClick = {
                                     datePickerIsVisible.value = false
-                                    newDeadline(datePickerState.selectedDateMillis ?: 0)
+                                    state.deadline.value = datePickerState.selectedDateMillis ?: 0
                                 }
                             ) {
                                 Text(
@@ -157,14 +137,14 @@ fun TaskSettings(
                     }
                 }
                 // DELETE BUTTON
-                if (deleteIsVisible) {
+                if (state.taskId.value != null) {
                     TextButton(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(AppTheme.colors.background),
-                        onClick = { onDeleteClick() }
+                        onClick = { onDeleteTaskClick() }
                     ) {
                         Text(
                             text = "Delete task",

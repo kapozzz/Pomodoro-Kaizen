@@ -52,8 +52,6 @@ fun AppTopBar(
     )
 }
 
-// todo immutable ?
-@Immutable
 data class AppTopBarState(
     val title: MutableState<String>,
     val onBackClick: MutableState<() -> Unit>,

@@ -5,15 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.kapozzz.common.ui_acrh.BaseViewModel
 import com.kapozzz.domain.models.Step
 import com.kapozzz.domain.models.Task
+import com.kapozzz.domain.models.TomatoProgram
 import com.kapozzz.domain.repositories.TasksRepository
+import com.kapozzz.domain.repositories.TomatoProgramsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateTaskViewModel @Inject constructor(
     private val tasksRepository: TasksRepository,
+    private val tomatoProgramsRepository: TomatoProgramsRepository
 ) : BaseViewModel<CreateTaskEvent, CreateTaskState, CreateTaskEffect>() {
 
     override fun createInitialState(): CreateTaskState {
@@ -49,6 +53,46 @@ class CreateTaskViewModel @Inject constructor(
             is CreateTaskEvent.DeleteTask -> {
                 deleteTask()
             }
+
+            is CreateTaskEvent.DeleteTomatoProgram -> {
+                deleteTomatoProgram(event.program)
+            }
+
+            is CreateTaskEvent.SaveTomatoProgram -> {
+                saveTomatoProgram(event.program)
+            }
+
+            is CreateTaskEvent.ApplyTomatoProgram -> {
+                applyTomatoProgram(event.program)
+            }
+        }
+    }
+
+    init {
+        viewModelScope.launch(Dispatchers.Main) {
+            tomatoProgramsRepository
+                .getTomatoPrograms()
+                .collect {
+                    currentState.programs.value = it
+                }
+        }
+    }
+
+    private fun saveTomatoProgram(program: TomatoProgram) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tomatoProgramsRepository.addTomatoProgram(program)
+        }
+    }
+
+    private fun applyTomatoProgram(program: TomatoProgram) {
+        viewModelScope.launch(Dispatchers.IO) {
+            currentState.program.value = program
+        }
+    }
+
+    private fun deleteTomatoProgram(program: TomatoProgram) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tomatoProgramsRepository.deleteTomatoProgram(program.id)
         }
     }
 
@@ -87,9 +131,11 @@ class CreateTaskViewModel @Inject constructor(
                     name.value.trim().isEmpty() -> {
                         setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.EmptyName))
                     }
+
                     steps.value.isEmpty() -> {
                         setEffect(CreateTaskEffect.ShowMessage(CreateTaskMessage.EmptySteps))
                     }
+
                     else -> {
                         try {
                             val task = Task(

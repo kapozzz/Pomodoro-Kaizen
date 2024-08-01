@@ -3,8 +3,10 @@ package com.kapozzz.data.di
 import android.content.Context
 import androidx.room.Room
 import com.kapozzz.data.impls.TasksRepositoryImpl
+import com.kapozzz.data.impls.TomatoProgramsRepositoryImpl
 import com.kapozzz.data.room.TasksDatabase
 import com.kapozzz.domain.repositories.TasksRepository
+import com.kapozzz.domain.repositories.TomatoProgramsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +30,11 @@ object TasksDataModule {
 
     @Provides
     fun provideTasksRepository(repo: TasksRepositoryImpl): TasksRepository {
+        return repo
+    }
+
+    @Provides
+    fun provideTomatoProgramsRepository(repo: TomatoProgramsRepositoryImpl): TomatoProgramsRepository {
         return repo
     }
 }
