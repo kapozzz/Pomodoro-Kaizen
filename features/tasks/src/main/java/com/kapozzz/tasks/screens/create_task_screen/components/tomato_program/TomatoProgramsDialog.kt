@@ -3,7 +3,9 @@ package com.kapozzz.tasks.screens.create_task_screen.components.tomato_program
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -34,10 +36,9 @@ fun TomatoProgramsDialog(
     ) {
         Card(
             modifier = modifier
-                .height(480.dp)
                 .width(320.dp),
             colors = CardDefaults.cardColors(
-                containerColor = AppTheme.colors.container
+                containerColor = AppTheme.colors.background
             )
         ) {
             AnimatedContent(targetState = currentScreen.value, label = "") {
@@ -59,6 +60,9 @@ fun TomatoProgramsDialog(
                         CreateTomatoProgram(
                             onProgramSave = {
                                 onProgramSave(it)
+                                currentScreen.value = TomatoProgramsDialogScreen.List
+                            },
+                            onBackClick = {
                                 currentScreen.value = TomatoProgramsDialogScreen.List
                             }
                         )

@@ -19,4 +19,7 @@
     <string name="rest_time_create">Rest time:</string>
     <string name="long_time_create">Long time:</string>
     <string name="save_in_create">Save</string>
+    <string name="new_program">New program</string>
+    <string name="program_name">Program name</string>
+    <string name="name_can_t_be_empty">Name can`t be empty</string>
 </resources>

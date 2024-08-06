@@ -2,7 +2,9 @@ package com.kapozzz.tasks.screens.create_task_screen.components.tomato_program
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kapozzz.domain.models.TomatoProgram
 import com.kapozzz.presentation.components.AppButton
+import com.kapozzz.tasks.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -29,11 +33,12 @@ fun TomatoProgramsList(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth()
+            .height(480.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         LazyColumn(
-            modifier = modifier
+            modifier = modifier.fillMaxHeight()
         ) {
             stickyHeader {
                 TomatoProgramCard(
@@ -45,7 +50,7 @@ fun TomatoProgramsList(
                 )
             }
             items(
-                list.value,
+                items = list.value,
                 key = { it.id }
             ) { program ->
                 TomatoProgramCard(
@@ -67,7 +72,7 @@ fun TomatoProgramsList(
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(8.dp),
-            name = "New program",
+            name = stringResource(R.string.new_program),
             onClick = { onNewProgramClick() }
         )
     }

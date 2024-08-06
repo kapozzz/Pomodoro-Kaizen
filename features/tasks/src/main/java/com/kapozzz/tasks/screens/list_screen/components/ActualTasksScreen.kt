@@ -1,6 +1,8 @@
 package com.kapozzz.tasks.screens.list_screen.components
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +43,7 @@ internal fun ActualTasksScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Screen(
     state: ListScreenState,
@@ -74,7 +77,8 @@ private fun Screen(
                         message.value = deleteMessageForAppDialog
                     }
                 },
-                onEdit = { sendEvent(ListScreenEvent.OnTaskLongTap(it.id)) }
+                onEdit = { sendEvent(ListScreenEvent.OnTaskLongTap(it.id)) },
+                modifier = Modifier.animateItemPlacement()
             )
         }
         // SPACER

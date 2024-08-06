@@ -59,13 +59,14 @@ internal fun ActualTaskCard(
         dismissState.reset()
     }
     SwipeToDismissBox(
+        modifier = modifier,
         state = dismissState,
         backgroundContent = {
             DismissBackground(dismissState = dismissState)
         },
         content = {
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(76.dp)
                     .clip(RoundedCornerShape(6.dp))
